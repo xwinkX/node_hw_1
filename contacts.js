@@ -5,9 +5,9 @@ const fs = require("fs/promises");
  */
 
 // TODO: задокументувати кожну функцію
-function listContacts = () {
-  // ...твій код
-}
+// function listContacts = () {
+//   // ...твій код
+// }
 
 function getContactById(contactId) {
   // ...твій код
