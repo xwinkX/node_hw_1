@@ -1,29 +1,40 @@
-const contacts = require("./db");
+const contacts = require("./contacts");
 
-const invorkeAction = async ({ action, id, name, email, phone }) => {
+const { Command } = require("commander");
+
+const program = new Command();
+program
+  .option("-a, --action <type>", "choose action")
+  .option("-i, --id <type>", "user id")
+  .option("-n, --name <type>", "user name")
+  .option("-e, --email <type>", "user email")
+  .option("-p, --phone <type>", "user phone");
+
+program.parse(process.argv);
+
+const argv = program.opts();
+
+const invokeAction = async ({ action, id, name, email, phone }) => {
   switch (action) {
-    case "getAll":
-      const allContacts = await contacts.getAll();
-      console.log(allContacts);
+    case "list":
+      const allContacts = await contacts.listContacts();
+      console.table(allContacts);
       break;
-    case "getById":
-      const oneContact = await contacts.getById(id);
+    case "get":
+      const oneContact = await contacts.getContactById(id);
       console.log(oneContact);
       break;
     case "add":
-      const newContact = await contacts.add({ name, email, phone });
+      const newContact = await contacts.addContact(name, email, phone);
       console.log(newContact);
       break;
+    case "remove":
+      const removeContact = await contacts.removeContact(id);
+      console.log(removeContact);
+      break;
     default:
-      console.log("Unknown action");
+      console.warn("\x1B[31m Unknown action type!");
   }
 };
 
-// invorkeAction({ action: "getAll" });
-// invorkeAction({ action: "getById", id: "5" });
-invorkeAction({
-  action: "add",
-  name: "Www",
-  email: "Sdf@mail.com",
-  phone: "54654646",
-});
+invokeAction(argv);
